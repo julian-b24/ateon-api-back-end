@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -17,6 +19,9 @@ import { AuthGuard } from './auth/auth.guard';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [config],
+    }),
+    MongooseModule.forRoot(process.env.MONGO_DB_CONNECTION_STRING, {
+      dbName: 'ateondb',
     }),
   ],
   controllers: [AppController],

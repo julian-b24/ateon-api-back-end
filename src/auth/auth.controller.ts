@@ -11,6 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { SkipAuth } from './auth.decorator';
+import { SignInDTO } from './dto/signIn.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -19,8 +20,8 @@ export class AuthController {
   @Post('login')
   @SkipAuth()
   @HttpCode(HttpStatus.OK)
-  signIn(@Body() signInDTO: Record<string, any>) {
-    return this.authService.signIn(signInDTO.username, signInDTO.password);
+  signIn(@Body() signInDTO: SignInDTO) {
+    return this.authService.signIn(signInDTO);
   }
 
   @UseGuards(AuthGuard)

@@ -18,7 +18,7 @@ export class AuthService {
   ) {}
 
   async signIn(signInDTO: SignInDTO): Promise<AccessTokenDTO> {
-    const user = await this.usersSerive.findOneByUsername(signInDTO.email);
+    const user = await this.usersSerive.findOneByEmail(signInDTO.email);
     const validPassword = await bcrypt.compare(
       signInDTO.password,
       user.password,

@@ -1,13 +1,14 @@
 import {
   HttpException,
   Injectable,
-  UnauthorizedException,
+  NotAcceptableException,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignInDTO } from './dto/signIn.dto';
 import { AccessTokenDTO } from './dto/token.dto';
 import { SignUpDTO } from './dto/signUp.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -18,8 +19,17 @@ export class AuthService {
 
   async signIn(signInDTO: SignInDTO): Promise<AccessTokenDTO> {
     const user = await this.usersSerive.findOneByUsername(signInDTO.email);
-    if (user?.password !== signInDTO.password) {
-      throw new UnauthorizedException();
+    const validPassword = await bcrypt.compare(
+      signInDTO.password,
+      user.password,
+    );
+
+    if (!user) {
+      throw new NotAcceptableException('Could not find the user');
+    }
+
+    if (!validPassword) {
+      throw new NotAcceptableException('Passord or email are not valid');
     }
 
     const payload = { email: user.email, role: user.role };

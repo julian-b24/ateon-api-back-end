@@ -17,6 +17,8 @@ async function bootstrap() {
 
   app.useGlobalGuards(new AuthGuard(new JwtService(), new Reflector()));
 
+  app.enableCors();
+
   await app.listen(port || 3000);
   Logger.log(` ~ Application is running on ${await app.getUrl()}`);
 }

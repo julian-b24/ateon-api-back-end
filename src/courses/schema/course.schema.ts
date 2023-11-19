@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import Module from 'module';
 import { HydratedDocument } from 'mongoose';
-import { User } from 'src/users/schema/user.schema';
 import { ModuleSchema } from './module.schema';
 import { Recording, RecordingSchema } from './recording.schema';
+import { CourseProfessor, CourseUser } from '../interface/courseUser';
 
 export type CourseDocument = HydratedDocument<Course>;
 
@@ -20,12 +20,12 @@ export class Course {
   @Prop({
     required: true,
   })
-  professor: User;
+  professor: CourseProfessor;
 
   @Prop({
     default: [],
   })
-  students: User[];
+  students: CourseUser[];
 
   @Prop({ type: [ModuleSchema], default: [] })
   modules: Module[];

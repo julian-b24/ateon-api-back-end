@@ -1,0 +1,78 @@
+{
+    "name": "Course Name",
+    "professor": {
+      "name": "Professor Name",
+      "email": "professor@example.com"
+    },
+    "students": [
+      {
+        "name": "Student 1",
+        "email": "student1@example.com"
+      },
+      {
+        "name": "Student 2",
+        "email": "student2@example.com"
+      }
+    ],
+    "modules": [
+      {
+        "name": "Module 1",
+        "description": "Module 1 description",
+        "topics": [
+          {
+            "name": "Topic 1",
+            "resources": [
+              {
+                "text": "Resource 1 Text",
+                "link": "http://resource1link.com",
+                "type": "text",
+                "status": "completed"
+              },
+              {
+                "text": "Resource 2 Text",
+                "link": "http://resource2link.com",
+                "type": "text",
+                "status": "pending"
+              }
+            ],
+            "deliverables": [
+              {
+                "name": "Deliverable 1",
+                "type": "exam",
+                "status": "completed"
+              },
+              {
+                "name": "Deliverable 2",
+                "type": "task",
+                "status": "pending"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Module 2",
+        "description": "Module 2 description",
+        "topics": [
+        ]
+      }
+    ],
+    "recordings": [
+      {
+        "title": "Recording 1",
+        "durationSeconds": 1200,
+        "link": "http://recording1link.com",
+        "timestamps": [
+          {
+            "seconds": 60,
+            "note": "Timestamp 1 Note"
+          },
+          {
+            "seconds": 180,
+            "note": "Timestamp 2 Note"
+          }
+        ]
+      }
+    ]
+  }
+  

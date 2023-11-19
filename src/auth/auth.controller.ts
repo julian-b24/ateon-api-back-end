@@ -43,4 +43,10 @@ export class AuthController {
   refreshToken(@Body() accessTokenDTO: AccessTokenDTO) {
     return this.authService.refreshToken(accessTokenDTO);
   }
+
+  @Get('user-token')
+  @HttpCode(HttpStatus.OK)
+  getUserByToken(@Body() accessTokenDTO: AccessTokenDTO) {
+    return this.authService.getUserByToken(accessTokenDTO);
+  }
 }

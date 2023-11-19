@@ -25,17 +25,20 @@ export class User {
   })
   password: string;
 
-  @Prop()
+  @Prop({ default: '' })
   institution: string;
 
-  @Prop()
+  @Prop({ default: '' })
   phone: string;
 
-  @Prop()
+  @Prop({ default: 'user' })
   role: string;
 
-  @Prop()
+  @Prop({ default: '' })
   degree: string;
+
+  @Prop({ default: '' })
+  profilePhotoURL: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Headers,
   HttpCode,
   HttpStatus,
   Post,
@@ -10,7 +11,6 @@ import { AuthService } from './auth.service';
 import { SkipAuth } from './auth.decorator';
 import { SignInDTO } from './dto/signIn.dto';
 import { SignUpDTO } from './dto/signUp.dto';
-import { AccessTokenDTO } from './dto/token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -30,23 +30,23 @@ export class AuthController {
     return this.authService.signUp(signUpDTO);
   }
 
-  @Post('validate-token-exp')
+  @Get('validate-token-exp')
   @SkipAuth()
   @HttpCode(HttpStatus.OK)
-  validateTokenExpiration(@Body() accessTokenDTO: AccessTokenDTO) {
-    return this.authService.validateTokenExpirationDate(accessTokenDTO);
+  validateTokenExpiration(@Headers('Authorization') bearerToken: string) {
+    return this.authService.validateTokenExpirationDate(bearerToken);
   }
 
   @Get('refresh-token')
   @SkipAuth()
   @HttpCode(HttpStatus.OK)
-  refreshToken(@Body() accessTokenDTO: AccessTokenDTO) {
-    return this.authService.refreshToken(accessTokenDTO);
+  refreshToken(@Headers('Authorization') bearerToken: string) {
+    return this.authService.refreshToken(bearerToken);
   }
 
   @Get('user-token')
   @HttpCode(HttpStatus.OK)
-  getUserByToken(@Body() accessTokenDTO: AccessTokenDTO) {
-    return this.authService.getUserByToken(accessTokenDTO);
+  getUserByToken(@Headers('Authorization') bearerToken: string) {
+    return this.authService.getUserByToken(bearerToken);
   }
 }

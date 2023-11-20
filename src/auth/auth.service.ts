@@ -56,13 +56,13 @@ export class AuthService {
   }
 
   async validateTokenExpirationDate(
-    accessTokenDTO: AccessTokenDTO,
+    bearerToken: string,
   ): Promise<TokenValidationDTO> {
     const tokenValidation: TokenValidationDTO = new TokenValidationDTO();
-    tokenValidation.accessToken = accessTokenDTO.accessToken;
+    tokenValidation.accessToken = this.extractTokenFromBearerToken(bearerToken);
 
     try {
-      await this.jwtService.verifyAsync(accessTokenDTO.accessToken, {
+      await this.jwtService.verifyAsync(tokenValidation.accessToken, {
         secret: process.env.JWT_SECRET_KEY,
       });
       tokenValidation.stillValid = true;
@@ -73,31 +73,32 @@ export class AuthService {
     return tokenValidation;
   }
 
-  async getUserByToken(accessTokenDTO: AccessTokenDTO): Promise<UserDTO> {
-    const payload: Payload = await this.jwtService.verifyAsync(
-      accessTokenDTO.accessToken,
-      {
-        secret: process.env.JWT_SECRET_KEY,
-      },
-    );
+  async getUserByToken(bearerToken: string): Promise<UserDTO> {
+    const token: string = this.extractTokenFromBearerToken(bearerToken);
+    const payload: Payload = await this.jwtService.verifyAsync(token, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
     const user = await this.usersSerive.findOneByEmail(payload.email);
     return user;
   }
 
-  async refreshToken(accessTokenDTO: AccessTokenDTO): Promise<AccessTokenDTO> {
-    const oldTokenPayload: Payload = await this.jwtService.verifyAsync(
-      accessTokenDTO.accessToken,
-      {
-        secret: process.env.JWT_SECRET_KEY,
-        ignoreExpiration: true,
-      },
-    );
+  async refreshToken(bearerToken: string): Promise<AccessTokenDTO> {
+    const token: string = this.extractTokenFromBearerToken(bearerToken);
+    const oldTokenPayload: Payload = await this.jwtService.verifyAsync(token, {
+      secret: process.env.JWT_SECRET_KEY,
+      ignoreExpiration: true,
+    });
 
     this.validateUserExistsMyEmail(oldTokenPayload.email);
     const newAccessToken: AccessTokenDTO =
       await this.createNewToken(oldTokenPayload);
 
     return newAccessToken;
+  }
+
+  private extractTokenFromBearerToken(bearerToken: string): string | undefined {
+    const [type, token] = bearerToken.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
   }
 
   private async validateUserExistsMyEmail(email: string): Promise<void> {

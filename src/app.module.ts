@@ -10,6 +10,7 @@ import { config } from './config/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { CoursesModule } from './courses/courses.module';
+import { StudentsModule } from './students/students.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CoursesModule } from './courses/courses.module';
       dbName: process.env.MONGO_DB_DBNAME,
     }),
     CoursesModule,
+    StudentsModule,
   ],
   controllers: [],
   providers: [

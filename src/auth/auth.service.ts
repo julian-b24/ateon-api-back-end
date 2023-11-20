@@ -59,7 +59,8 @@ export class AuthService {
     bearerToken: string,
   ): Promise<TokenValidationDTO> {
     const tokenValidation: TokenValidationDTO = new TokenValidationDTO();
-    tokenValidation.accessToken = this.extractTokenFromBearerToken(bearerToken);
+    tokenValidation.accessToken =
+      await this.extractTokenFromBearerToken(bearerToken);
 
     try {
       await this.jwtService.verifyAsync(tokenValidation.accessToken, {
@@ -74,16 +75,14 @@ export class AuthService {
   }
 
   async getUserByToken(bearerToken: string): Promise<UserDTO> {
-    const token: string = this.extractTokenFromBearerToken(bearerToken);
-    const payload: Payload = await this.jwtService.verifyAsync(token, {
-      secret: process.env.JWT_SECRET_KEY,
-    });
+    const token: string = await this.extractTokenFromBearerToken(bearerToken);
+    const payload: Payload = await this.getTokenPayload(token);
     const user = await this.usersSerive.findOneByEmail(payload.email);
     return user;
   }
 
   async refreshToken(bearerToken: string): Promise<AccessTokenDTO> {
-    const token: string = this.extractTokenFromBearerToken(bearerToken);
+    const token: string = await this.extractTokenFromBearerToken(bearerToken);
     const oldTokenPayload: Payload = await this.jwtService.verifyAsync(token, {
       secret: process.env.JWT_SECRET_KEY,
       ignoreExpiration: true,
@@ -96,7 +95,9 @@ export class AuthService {
     return newAccessToken;
   }
 
-  private extractTokenFromBearerToken(bearerToken: string): string | undefined {
+  async extractTokenFromBearerToken(
+    bearerToken: string,
+  ): Promise<string | undefined> {
     const [type, token] = bearerToken.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
   }
@@ -104,6 +105,17 @@ export class AuthService {
   private async validateUserExistsMyEmail(email: string): Promise<void> {
     const user = await this.usersSerive.findOneByEmail(email);
     if (user === null) {
+      throw new UnauthorizedException();
+    }
+  }
+
+  async getTokenPayload(token: string): Promise<Payload> {
+    try {
+      const payload: Payload = await this.jwtService.verifyAsync(token, {
+        secret: process.env.JWT_SECRET_KEY,
+      });
+      return payload;
+    } catch (error) {
       throw new UnauthorizedException();
     }
   }

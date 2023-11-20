@@ -1,17 +1,23 @@
-import { Body, Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Headers, UseGuards } from '@nestjs/common';
 import { StudentsService } from './students.service';
-import { StudentDTO } from './dto/student.dto';
 import { StudentRole } from 'src/auth/role.decorator';
 import { RoleGuard } from 'src/auth/role.guard';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('students')
 export class StudentsController {
-  constructor(private studentsService: StudentsService) {}
+  constructor(
+    private studentsService: StudentsService,
+    private authService: AuthService,
+  ) {}
 
-  @Get()
+  @Get('courses')
   @StudentRole()
   @UseGuards(RoleGuard)
-  findStudentCourses(@Body() studentDTO: StudentDTO) {
-    return this.studentsService.findStudentCourses(studentDTO.email);
+  async findStudentCourses(@Headers('Authorization') bearerToken: string) {
+    const token =
+      await this.authService.extractTokenFromBearerToken(bearerToken);
+    const payload = await this.authService.getTokenPayload(token);
+    return this.studentsService.findStudentCourses(payload.email);
   }
 }

@@ -4,6 +4,7 @@ import { HydratedDocument } from 'mongoose';
 import { ModuleSchema } from './module.schema';
 import { Recording, RecordingSchema } from './recording.schema';
 import { CourseProfessor, CourseUser } from '../interface/courseUser';
+import { Schedule } from './schedule.schema';
 
 export type CourseDocument = HydratedDocument<Course>;
 
@@ -32,6 +33,9 @@ export class Course {
 
   @Prop({ type: [RecordingSchema], default: [] })
   recordings: Recording[];
+
+  @Prop({ default: null })
+  schedule: Schedule;
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

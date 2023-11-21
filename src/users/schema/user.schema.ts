@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { NoteGroup } from './note.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -39,6 +40,9 @@ export class User {
 
   @Prop({ default: '' })
   profilePhotoURL: string;
+
+  @Prop({ default: [] })
+  notesGroups: NoteGroup[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -1,9 +1,11 @@
 import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/user.schema';
 import { CreateUserDTO } from './dto/createUser.dto';
 import * as bcrypt from 'bcrypt';
+import { NoteGroup } from './schema/note.schema';
+import { CreateNoteDTO } from './dto/createNote.dto';
 
 @Injectable()
 export class UsersService {
@@ -34,6 +36,30 @@ export class UsersService {
   async existsUser(email: string): Promise<boolean> {
     const existUsers = this.userModel.find({ email: email });
     return (await existUsers).length === 1;
+  }
+
+  async addNote(userId: string, createNoteDTO: CreateNoteDTO): Promise<User> {
+    const user = await this.userModel.findById(userId);
+    if (user) {
+      const noteGroup: NoteGroup = user.notesGroups.find(
+        (group) => group.groupName === createNoteDTO.groupName,
+      );
+
+      if (noteGroup) {
+        const index = user.notesGroups.indexOf(noteGroup);
+        noteGroup.notes.push(createNoteDTO.newNote);
+        user.notesGroups[index] = noteGroup;
+      } else {
+        const newNoteGroup = new NoteGroup();
+        newNoteGroup.groupName = createNoteDTO.groupName;
+        newNoteGroup.notes = [];
+        newNoteGroup.notes.push(createNoteDTO.newNote);
+        user.notesGroups.push(newNoteGroup);
+      }
+      return user.save();
+    } else {
+      throw new NotFoundException('User not found');
+    }
   }
 
   private async encryptPassword(password: string): Promise<string> {

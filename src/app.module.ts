@@ -11,6 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { CoursesModule } from './courses/courses.module';
 import { StudentsModule } from './students/students.module';
+import { ProfessorsModule } from './professors/professors.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { StudentsModule } from './students/students.module';
     }),
     CoursesModule,
     StudentsModule,
+    ProfessorsModule,
   ],
   controllers: [],
   providers: [

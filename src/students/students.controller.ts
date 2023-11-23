@@ -20,4 +20,16 @@ export class StudentsController {
     const payload = await this.authService.getTokenPayload(token);
     return this.studentsService.findStudentCourses(payload.email);
   }
+
+  @Get('schedules')
+  @StudentRole()
+  @UseGuards(RoleGuard)
+  async findProfessorScheduledCourses(
+    @Headers('Authorization') bearerToken: string,
+  ) {
+    const token =
+      await this.authService.extractTokenFromBearerToken(bearerToken);
+    const payload = await this.authService.getTokenPayload(token);
+    return this.studentsService.findScheduledCourses(payload.email);
+  }
 }

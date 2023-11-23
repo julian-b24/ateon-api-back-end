@@ -24,7 +24,7 @@ export class ProfessorsController {
   @Get('schedules')
   @ProfessorRole()
   @UseGuards(RoleGuard)
-  async dinfProfessorScheduledCourses(
+  async findProfessorScheduledCourses(
     @Headers('Authorization') bearerToken: string,
   ) {
     const token =

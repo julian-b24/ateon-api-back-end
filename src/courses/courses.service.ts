@@ -4,6 +4,8 @@ import { Course } from './schema/course.schema';
 import { Model } from 'mongoose';
 import { CreateCourseDTO } from './dto/createCourse.dto';
 import { UpdateCourseDTO } from './dto/updateCourse.dto';
+import { ScheduledCoursesDTO } from './dto/scheduledCourses.dto';
+import { ScheduleCourse } from './interface/scheduleCourse';
 //import { Module as ModuleAteon } from './schema/module.schema';
 //import { ModuleDTO } from './dto/module.dto';
 //import { Topic } from './schema/topic.schema';
@@ -41,6 +43,56 @@ export class CoursesService {
       courseDTO,
     );
     return updatedCourse;
+  }
+
+  getActivesTodayScheculedCourses(todayCourses: Course[]): ScheduledCoursesDTO {
+    const finishedClasses: ScheduleCourse[] = [];
+    const incommingClasses: ScheduleCourse[] = [];
+
+    todayCourses.forEach((course) => {
+      const courseIsActive = this.isCourseActive(course);
+      if (courseIsActive) {
+        const now = new Date();
+        const endHour = course.schedule.endHour;
+
+        const endDateTime = new Date(now);
+        endDateTime.setHours(
+          Number(endHour.split(':')[0]),
+          Number(endHour.split(':')[1]),
+        );
+
+        const scheduleCourse: ScheduleCourse = {
+          courseName: course.name,
+          startHour: course.schedule.startHour,
+          endHour: course.schedule.endHour,
+        };
+
+        if (now < endDateTime) {
+          incommingClasses.push(scheduleCourse);
+        } else {
+          finishedClasses.push(scheduleCourse);
+        }
+      }
+    });
+
+    const scheduledCourseDTO: ScheduledCoursesDTO = {
+      finishedClasses,
+      incommingClasses,
+    };
+
+    return scheduledCourseDTO;
+  }
+
+  private isCourseActive(course: Course): boolean {
+    const now = new Date();
+    const startDate = new Date(course.schedule.startDate);
+    const endDate = new Date(course.schedule.endDate);
+
+    const nowDate = now.toISOString().slice(0, 10);
+    const startDateString = startDate.toISOString().slice(0, 10);
+    const endDateString = endDate.toISOString().slice(0, 10);
+
+    return startDateString <= nowDate && nowDate <= endDateString;
   }
 
   /*

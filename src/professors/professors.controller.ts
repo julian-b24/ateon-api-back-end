@@ -20,4 +20,16 @@ export class ProfessorsController {
     const payload = await this.authService.getTokenPayload(token);
     return this.professorService.findProfessorCourses(payload.email);
   }
+
+  @Get('schedules')
+  @ProfessorRole()
+  @UseGuards(RoleGuard)
+  async dinfProfessorScheduledCourses(
+    @Headers('Authorization') bearerToken: string,
+  ) {
+    const token =
+      await this.authService.extractTokenFromBearerToken(bearerToken);
+    const payload = await this.authService.getTokenPayload(token);
+    return this.professorService.findScheduledCourses(payload.email);
+  }
 }

@@ -8,7 +8,6 @@ export type ModuleDocument = HydratedDocument<Module>;
 export class Module {
   @Prop({
     required: true,
-    unique: true,
     trim: true,
   })
   name: string;

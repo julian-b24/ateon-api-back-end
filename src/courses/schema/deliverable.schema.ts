@@ -1,5 +1,6 @@
 import { Prop, Schema } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { Grade } from '../interface/grade';
 
 export type DeliverableDocument = HydratedDocument<Deliverable>;
 
@@ -17,4 +18,7 @@ export class Deliverable {
 
   @Prop({ default: 'pending' })
   status: 'completed' | 'pending' | 'in progress';
+
+  @Prop({ default: [] })
+  grades: Grade[];
 }

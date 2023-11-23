@@ -7,9 +7,7 @@ export type RecordingDocument = HydratedDocument<Recording>;
 @Schema()
 export class Recording {
   @Prop({
-    index: true,
     required: true,
-    unique: true,
     trim: true,
   })
   title: string;

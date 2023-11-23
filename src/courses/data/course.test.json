@@ -1,17 +1,20 @@
 {
-    "name": "Course Name",
+    "name": "Course Name 2",
     "professor": {
-      "name": "Professor Name",
-      "email": "professor@example.com"
+      "name": "Usuario 2",
+      "email": "usuario2@icesi.edu.co",
+      "degree": "Maestría en Matemáticas",
+      "phoneNumber": "9876543210",
+      "profilePicture": ""
     },
     "students": [
       {
-        "name": "Student 1",
-        "email": "student1@example.com"
+        "name": "Usuario 4",
+        "email": "usuario4@icesi.edu.co"
       },
       {
-        "name": "Student 2",
-        "email": "student2@example.com"
+        "name": "Usuario 5",
+        "email": "usuario5@icesi.edu.co"
       }
     ],
     "modules": [
@@ -39,12 +42,32 @@
               {
                 "name": "Deliverable 1",
                 "type": "exam",
-                "status": "completed"
+                "status": "completed",
+                "grades": [
+                  {
+                    "studentEmail": "student1@example.com",
+                    "grade": 3.0
+                  },
+                  {
+                    "studentEmail": "student2@example.com",
+                    "grade": 5.0
+                  }
+                ]
               },
               {
                 "name": "Deliverable 2",
                 "type": "task",
-                "status": "pending"
+                "status": "pending",
+                "grades": [
+                  {
+                    "studentEmail": "student1@example.com",
+                    "grade": 4.0
+                  },
+                  {
+                    "studentEmail": "student2@example.com",
+                    "grade": 4.5
+                  }
+                ]
               }
             ]
           }
@@ -73,6 +96,14 @@
           }
         ]
       }
-    ]
+    ],
+    "schedule": {
+      "day": "Wednesday",
+      "startHour": "17:00",
+      "endHour": "21:00",
+      "startDate": "2023-08-10",
+      "endDate": "2024-12-04"
+    }
+    
   }
   

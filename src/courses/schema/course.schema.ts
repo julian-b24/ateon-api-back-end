@@ -19,6 +19,7 @@ export class Course {
   name: string;
 
   @Prop({
+    index: false,
     required: true,
   })
   professor: CourseProfessor;

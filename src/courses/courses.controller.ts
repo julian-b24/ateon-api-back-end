@@ -2,9 +2,11 @@ import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDTO } from './dto/createCourse.dto';
 import { UpdateCourseDTO } from './dto/updateCourse.dto';
+import { ApiTags } from '@nestjs/swagger';
 //import { ModuleDTO } from './dto/module.dto';
 //import { CreateTopicDTO } from './dto/createTopic.dto';
 
+@ApiTags('Courses')
 @Controller('courses')
 export class CoursesController {
   constructor(private coursesService: CoursesService) {}

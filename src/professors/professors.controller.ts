@@ -3,7 +3,9 @@ import { ProfessorRole } from 'src/auth/role.decorator';
 import { RoleGuard } from 'src/auth/role.guard';
 import { ProfessorsService } from './professors.service';
 import { AuthService } from 'src/auth/auth.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Professors')
 @Controller('professors')
 export class ProfessorsController {
   constructor(

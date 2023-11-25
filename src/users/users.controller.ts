@@ -2,7 +2,9 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { SkipAuth } from 'src/auth/auth.decorator';
 import { CreateNoteDTO } from './dto/createNote.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private usersServie: UsersService) {}

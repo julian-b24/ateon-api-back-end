@@ -11,7 +11,9 @@ import { AuthService } from './auth.service';
 import { SkipAuth } from './auth.decorator';
 import { SignInDTO } from './dto/signIn.dto';
 import { SignUpDTO } from './dto/signUp.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

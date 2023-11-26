@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { SkipAuth } from 'src/auth/auth.decorator';
 import { CreateNoteDTO } from './dto/createNote.dto';
@@ -17,6 +24,7 @@ export class UsersController {
 
   @Get(':userId')
   findById(@Param('userId') userId: string) {
+    this.validateIdIsNotNull(userId);
     return this.usersServie.findOne(userId);
   }
 
@@ -26,5 +34,9 @@ export class UsersController {
     @Body() createNoteDTO: CreateNoteDTO,
   ) {
     return this.usersServie.addNote(userId, createNoteDTO);
+  }
+
+  private validateIdIsNotNull(userId: string) {
+    if (userId === null) throw new BadRequestException('userId is required');
   }
 }

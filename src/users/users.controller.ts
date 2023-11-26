@@ -16,7 +16,7 @@ export class UsersController {
   }
 
   @Get(':userId')
-  findById(@Param(':userId') userId: string) {
+  findById(@Param('userId') userId: string) {
     return this.usersServie.findOne(userId);
   }
 

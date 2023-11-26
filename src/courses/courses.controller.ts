@@ -39,6 +39,11 @@ export class CoursesController {
     return this.coursesService.updateCourse(courseId, updateCourseDTO);
   }
 
+  @Get(':courseId/metrics')
+  getMetrics(@Param('courseId') courseId: string) {
+    return this.coursesService.getMetrics(courseId);
+  }
+
   /*
   @Post(':courseId/modules')
   addModule(@Param('courseId') courseId: string, @Body() moduleDTO: ModuleDTO) {

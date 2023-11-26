@@ -45,6 +45,11 @@ export class CoursesService {
     return updatedCourse;
   }
 
+  async getMetrics(courseId: string): Promise<boolean> {
+    const course = this.courseModel.findById(courseId);
+    return course !== null;
+  }
+
   getActivesTodayScheculedCourses(todayCourses: Course[]): ScheduledCoursesDTO {
     const finishedClasses: ScheduleCourse[] = [];
     const incommingClasses: ScheduleCourse[] = [];

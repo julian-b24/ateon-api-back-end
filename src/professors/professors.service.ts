@@ -24,7 +24,7 @@ export class ProfessorsService {
     const courses: Course[] = await this.courseModel
       .find({
         'professor.email': professorEmail,
-        'schedule.day': { $regex: `^${todayDay}`, $options: 'i' },
+        'schedule.days': { $regex: `^${todayDay}`, $options: 'i' },
       })
       .exec();
 

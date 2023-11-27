@@ -6,7 +6,7 @@ export type ScheduleDocument = HydratedDocument<Schedule>;
 @Schema({ _id: false })
 export class Schedule {
   @Prop()
-  day: string;
+  days: string[];
 
   @Prop()
   startHour: string;

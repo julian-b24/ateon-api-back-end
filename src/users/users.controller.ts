@@ -33,6 +33,7 @@ export class UsersController {
     @Param('userId') userId: string,
     @Body() createNoteDTO: CreateNoteDTO,
   ) {
+    this.validateIdIsNotNull(userId);
     return this.usersServie.addNote(userId, createNoteDTO);
   }
 

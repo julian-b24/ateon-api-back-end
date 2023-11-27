@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import Module from 'module';
+import { Module } from './module.schema';
 import { HydratedDocument } from 'mongoose';
 import { ModuleSchema } from './module.schema';
 import { Recording, RecordingSchema } from './recording.schema';
 import { CourseProfessor, CourseUser } from '../interface/courseUser';
 import { Schedule } from './schedule.schema';
+import { Session } from '../interface/session';
 
 export type CourseDocument = HydratedDocument<Course>;
 
@@ -37,6 +38,9 @@ export class Course {
 
   @Prop({ default: null })
   schedule: Schedule;
+
+  @Prop()
+  sessions: Session[];
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

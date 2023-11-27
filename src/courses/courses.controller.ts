@@ -1,10 +1,18 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDTO } from './dto/createCourse.dto';
 import { UpdateCourseDTO } from './dto/updateCourse.dto';
 import { ApiTags } from '@nestjs/swagger';
-//import { ModuleDTO } from './dto/module.dto';
-//import { CreateTopicDTO } from './dto/createTopic.dto';
+import { ProfessorRole } from 'src/auth/role.decorator';
+import { RoleGuard } from 'src/auth/role.guard';
 
 @ApiTags('Courses')
 @Controller('courses')
@@ -40,29 +48,9 @@ export class CoursesController {
   }
 
   @Get(':courseId/metrics')
+  @ProfessorRole()
+  @UseGuards(RoleGuard)
   getMetrics(@Param('courseId') courseId: string) {
     return this.coursesService.getMetrics(courseId);
   }
-
-  /*
-  @Post(':courseId/modules')
-  addModule(@Param('courseId') courseId: string, @Body() moduleDTO: ModuleDTO) {
-    return this.coursesService.addModuleToCourse(courseId, moduleDTO);
-  }
-  */
-
-  /*
-  @Post(':courseId/modules/:moduleName/topics')
-  addTopic(
-    @Param('courseId') courseId: string,
-    @Body() createTopicDTO: CreateTopicDTO,
-    @Param('moduleName') moduleName: string,
-  ) {
-    return this.coursesService.addTopicToModuleCourse(
-      courseId,
-      createTopicDTO,
-      moduleName,
-    );
-  }
-  */
 }

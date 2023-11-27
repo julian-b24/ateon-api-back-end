@@ -1,5 +1,5 @@
 {
-    "name": "Course Name 2",
+    "name": "Course Name 3",
     "professor": {
       "name": "Usuario 2",
       "email": "usuario2@icesi.edu.co",
@@ -98,12 +98,52 @@
       }
     ],
     "schedule": {
-      "day": "Wednesday",
+      "days": ["Monday", "Tuesday", "Wednesday","Thursday", "Friday", "Saturday", "Sunday"],
       "startHour": "17:00",
       "endHour": "21:00",
       "startDate": "2023-08-10",
-      "endDate": "2024-12-04"
-    }
-    
+      "endDate": "2023-12-04"
+    },
+    "sessions": [
+      {
+        "date": "2023-08-10",
+        "participants": [
+          {
+            "name": "Usuario 4",
+            "email": "usuario4@icesi.edu.co"
+          },
+          {
+            "name": "Usuario 5",
+            "email": "usuario5@icesi.edu.co"
+          }
+        ]
+      },
+      {
+        "date": "2023-08-17",
+        "participants": [
+          {
+            "name": "Usuario 4",
+            "email": "usuario4@icesi.edu.co"
+          }
+        ]
+      },
+      {
+        "date": "2023-08-24",
+        "participants": [
+          {
+            "name": "Usuario 4",
+            "email": "usuario4@icesi.edu.co"
+          },
+          {
+            "name": "Usuario 5",
+            "email": "usuario5@icesi.edu.co"
+          }
+        ]
+      },
+      {
+        "date": "2023-08-31",
+        "participants": []
+      }
+    ]
   }
   

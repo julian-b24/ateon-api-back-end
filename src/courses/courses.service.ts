@@ -1,14 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Course } from './schema/course.schema';
+import { Module } from './schema/module.schema';
 import { Model } from 'mongoose';
 import { CreateCourseDTO } from './dto/createCourse.dto';
 import { UpdateCourseDTO } from './dto/updateCourse.dto';
 import { ScheduledCoursesDTO } from './dto/scheduledCourses.dto';
 import { ScheduleCourse } from './interface/scheduleCourse';
-//import { Module as ModuleAteon } from './schema/module.schema';
+import { Topic } from './schema/topic.schema';
+import { Resource } from './schema/resource.schema';
+import { CourseMetricsDTO } from './dto/courseMetrics.dto';
+import { Grade } from './interface/grade';
+import { Deliverable } from './schema/deliverable.schema';
+import { Session } from './interface/session';
 //import { ModuleDTO } from './dto/module.dto';
-//import { Topic } from './schema/topic.schema';
 //import { CreateTopicDTO } from './dto/createTopic.dto';
 
 @Injectable()
@@ -45,9 +50,16 @@ export class CoursesService {
     return updatedCourse;
   }
 
-  async getMetrics(courseId: string): Promise<boolean> {
-    const course = this.courseModel.findById(courseId);
-    return course !== null;
+  async getMetrics(courseId: string): Promise<CourseMetricsDTO> {
+    const course: Course | null = await this.courseModel
+      .findById(courseId)
+      .exec();
+    const metrics: CourseMetricsDTO = {
+      courseCompletion: this.calculateCourseCompletion(course),
+      deliverablesGrades: this.getDeliverablesScores(course),
+      assistance: this.getAssistanceBySession(course),
+    };
+    return metrics;
   }
 
   getActivesTodayScheculedCourses(todayCourses: Course[]): ScheduledCoursesDTO {
@@ -98,6 +110,59 @@ export class CoursesService {
     const endDateString = endDate.toISOString().slice(0, 10);
 
     return startDateString <= nowDate && nowDate <= endDateString;
+  }
+
+  private calculateCourseCompletion(course: Course): number {
+    let totalCourseResources: number = 0;
+    let completedResources: number = 0;
+    course.modules.forEach((module: Module) => {
+      module.topics.forEach((topic: Topic) => {
+        topic.resources.forEach((resource: Resource) => {
+          totalCourseResources += 1;
+          if (resource.status === 'completed') completedResources += 1;
+        });
+      });
+    });
+
+    const courseCompletion: number =
+      100 * (completedResources / totalCourseResources);
+    return courseCompletion;
+  }
+
+  private getDeliverablesScores(course: Course): object {
+    const deliverablesScores = {};
+    course.modules.forEach((module: Module) => {
+      module.topics.forEach((topic: Topic) => {
+        topic.deliverables.forEach((deliverable: Deliverable) => {
+          deliverablesScores[deliverable.name] = this.groupGradesByValue(
+            deliverable.grades,
+          );
+        });
+      });
+    });
+    return deliverablesScores;
+  }
+
+  private getAssistanceBySession(course: Course): object {
+    const assistance = {};
+    course.sessions.forEach((session: Session) => {
+      const date = new Date(session.date);
+      assistance[date.toLocaleDateString()] = session.participants.length;
+    });
+    return assistance;
+  }
+
+  private groupGradesByValue(grades: Grade[]): object {
+    return {
+      '0 - 0.9': grades.filter((grade) => grade.grade < 1).length,
+      '1 - 1.9': grades.filter((grade) => grade.grade < 2 && grade.grade >= 1)
+        .length,
+      '2 - 2.9': grades.filter((grade) => grade.grade < 3 && grade.grade >= 2)
+        .length,
+      '3 - 3.9': grades.filter((grade) => grade.grade < 4 && grade.grade >= 3)
+        .length,
+      '4 - 5': grades.filter((grade) => grade.grade >= 4).length,
+    };
   }
 
   /*

@@ -24,7 +24,7 @@ export class StudentsService {
     const courses: Course[] = await this.courseModel
       .find({
         'students.email': studentEmail,
-        'schedule.day': { $regex: `^${todayDay}`, $options: 'i' },
+        'schedule.days': { $regex: `^${todayDay}`, $options: 'i' },
       })
       .exec();
 

@@ -1,5 +1,5 @@
 export class CourseMetricsDTO {
   courseCompletion: number;
   assistance: object;
-  deliverablesGrades: object;
+  deliverablesGrades: any[];
 }

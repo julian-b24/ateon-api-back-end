@@ -64,7 +64,7 @@ export class CoursesService {
 
   getActivesTodayScheculedCourses(todayCourses: Course[]): ScheduledCoursesDTO {
     const finishedClasses: ScheduleCourse[] = [];
-    const incommingClasses: ScheduleCourse[] = [];
+    const incomingClasses: ScheduleCourse[] = [];
 
     todayCourses.forEach((course) => {
       const courseIsActive = this.isCourseActive(course);
@@ -85,7 +85,7 @@ export class CoursesService {
         };
 
         if (now < endDateTime) {
-          incommingClasses.push(scheduleCourse);
+          incomingClasses.push(scheduleCourse);
         } else {
           finishedClasses.push(scheduleCourse);
         }
@@ -94,7 +94,7 @@ export class CoursesService {
 
     const scheduledCourseDTO: ScheduledCoursesDTO = {
       finishedClasses,
-      incommingClasses,
+      incomingClasses,
     };
 
     return scheduledCourseDTO;
@@ -129,14 +129,16 @@ export class CoursesService {
     return courseCompletion;
   }
 
-  private getDeliverablesScores(course: Course): object {
-    const deliverablesScores = {};
+  private getDeliverablesScores(course: Course): any[] {
+    const deliverablesScores = [];
     course.modules.forEach((module: Module) => {
       module.topics.forEach((topic: Topic) => {
         topic.deliverables.forEach((deliverable: Deliverable) => {
-          deliverablesScores[deliverable.name] = this.groupGradesByValue(
+          const scores = {};
+          scores[deliverable.name] = this.groupGradesByValue(
             deliverable.grades,
           );
+          deliverablesScores.push(scores);
         });
       });
     });

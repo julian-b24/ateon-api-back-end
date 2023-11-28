@@ -40,7 +40,7 @@ export class ProfessorsController {
   @UseGuards(RoleGuard)
   async findProfessorScheduledCoursesInADate(
     @Headers('Authorization') bearerToken: string,
-    @Param('unixDate') unixDate: number,
+    @Param('unixDate') unixDate: number, //In milliseconds
   ) {
     const token =
       await this.authService.extractTokenFromBearerToken(bearerToken);

@@ -20,7 +20,7 @@ async function bootstrap() {
 
   app.enableCors();
 
-  //Documentation configuration
+  //Documentation Swagger setup
   const configDocs = new DocumentBuilder()
     .setTitle('Ateon API Documentation')
     .setDescription(

@@ -166,35 +166,4 @@ export class CoursesService {
       '4 - 5': grades.filter((grade) => grade.grade >= 4).length,
     };
   }
-
-  /*
-  async addModuleToCourse(
-    courseId: string,
-    moduleDTO: ModuleDTO,
-  ): Promise<Course> {
-    //TODO: Validate if course exists, throw error if not
-    const newModule: ModuleAteon = new this.moduleModel(moduleDTO);
-    await this.courseModel
-      .updateOne({ _id: courseId }, { $push: { modules: newModule } })
-      .exec();
-    const course = await this.findById(courseId);
-    return course;
-  }
-  */
-
-  /*
-  async addTopicToModuleCourse(
-    courseId: string,
-    createTopicDTO: CreateTopicDTO,
-    moduleName: string,
-  ): Promise<Course> {
-    //TODO: Validate if course exists, throw error if not
-    const newTopic: Topic = new this.topicModel(createTopicDTO);
-    const course: Course = await this.courseModel.findById(courseId);
-    const module: ModuleAteon = course.modules.filter(
-      (m) => m.name === moduleName,
-    );
-    return course;
-  }
-  */
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Headers, UseGuards } from '@nestjs/common';
+import { Controller, Get, Headers, Param, UseGuards } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import { StudentRole } from 'src/auth/role.decorator';
 import { RoleGuard } from 'src/auth/role.guard';
@@ -52,5 +52,31 @@ export class StudentsController {
       await this.authService.extractTokenFromBearerToken(bearerToken);
     const payload = await this.authService.getTokenPayload(token);
     return this.studentsService.findScheduledCourses(payload.email);
+  }
+
+  @Get('schedules/:unixDate')
+  @StudentRole()
+  @UseGuards(RoleGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'List of the courses that a student has schedule in the date',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'Access token of the logged user',
+  })
+  async findStudentScheduledCoursesInADate(
+    @Headers('Authorization') bearerToken: string,
+    @Param('unixDate') unixDate: number,
+  ) {
+    const token =
+      await this.authService.extractTokenFromBearerToken(bearerToken);
+    const payload = await this.authService.getTokenPayload(token);
+    return this.studentsService.findScheduledCoursesInADate(
+      payload.email,
+      unixDate,
+    );
   }
 }

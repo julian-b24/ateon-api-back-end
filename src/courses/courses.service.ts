@@ -67,7 +67,7 @@ export class CoursesService {
     const incomingClasses: ScheduleCourse[] = [];
 
     todayCourses.forEach((course) => {
-      const courseIsActive = this.isCourseActive(course);
+      const courseIsActive = this.isCourseActive(course, new Date());
       if (courseIsActive) {
         const now = new Date();
         const endHour = course.schedule.endHour;
@@ -100,16 +100,59 @@ export class CoursesService {
     return scheduledCourseDTO;
   }
 
-  private isCourseActive(course: Course): boolean {
-    const now = new Date();
+  getScheduledCoursesInADate(
+    dayCourses: Course[],
+    date: Date,
+  ): ScheduledCoursesDTO {
+    const finishedClasses: ScheduleCourse[] = [];
+    const incomingClasses: ScheduleCourse[] = [];
+
+    dayCourses.forEach((course) => {
+      const courseIsActive = this.isCourseActive(course, date);
+      if (courseIsActive) {
+        const now = new Date();
+        const endDate = new Date(course.schedule.endDate);
+        const endDateTime = new Date(now);
+
+        const endHour = course.schedule.endHour;
+        endDateTime.setHours(
+          Number(endHour.split(':')[0]),
+          Number(endHour.split(':')[1]),
+        );
+
+        const scheduleCourse: ScheduleCourse = {
+          courseName: course.name,
+          startHour: course.schedule.startHour,
+          endHour: course.schedule.endHour,
+        };
+
+        if (now > date) {
+          finishedClasses.push(scheduleCourse);
+        } else if (now < endDate && now < endDateTime) {
+          incomingClasses.push(scheduleCourse);
+        } else {
+          finishedClasses.push(scheduleCourse);
+        }
+      }
+    });
+
+    const scheduledCourseDTO: ScheduledCoursesDTO = {
+      finishedClasses,
+      incomingClasses,
+    };
+
+    return scheduledCourseDTO;
+  }
+
+  private isCourseActive(course: Course, date: Date): boolean {
     const startDate = new Date(course.schedule.startDate);
     const endDate = new Date(course.schedule.endDate);
 
-    const nowDate = now.toISOString().slice(0, 10);
+    const dateString = date.toISOString().slice(0, 10);
     const startDateString = startDate.toISOString().slice(0, 10);
     const endDateString = endDate.toISOString().slice(0, 10);
 
-    return startDateString <= nowDate && nowDate <= endDateString;
+    return startDateString <= dateString && dateString <= endDateString;
   }
 
   private calculateCourseCompletion(course: Course): number {

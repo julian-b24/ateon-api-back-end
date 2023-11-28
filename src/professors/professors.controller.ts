@@ -1,4 +1,4 @@
-import { Controller, Get, Headers, UseGuards } from '@nestjs/common';
+import { Controller, Get, Headers, Param, UseGuards } from '@nestjs/common';
 import { ProfessorRole } from 'src/auth/role.decorator';
 import { RoleGuard } from 'src/auth/role.guard';
 import { ProfessorsService } from './professors.service';
@@ -33,5 +33,21 @@ export class ProfessorsController {
       await this.authService.extractTokenFromBearerToken(bearerToken);
     const payload = await this.authService.getTokenPayload(token);
     return this.professorService.findScheduledCourses(payload.email);
+  }
+
+  @Get('schedules/:unixDate')
+  @ProfessorRole()
+  @UseGuards(RoleGuard)
+  async findProfessorScheduledCoursesInADate(
+    @Headers('Authorization') bearerToken: string,
+    @Param('unixDate') unixDate: number,
+  ) {
+    const token =
+      await this.authService.extractTokenFromBearerToken(bearerToken);
+    const payload = await this.authService.getTokenPayload(token);
+    return this.professorService.findScheduledCoursesInADate(
+      payload.email,
+      unixDate,
+    );
   }
 }

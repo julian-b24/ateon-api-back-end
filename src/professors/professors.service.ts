@@ -34,6 +34,28 @@ export class ProfessorsService {
     return scheduledCourseDTO;
   }
 
+  async findScheduledCoursesInADate(
+    professorEmail: string,
+    unixDate: number,
+  ): Promise<ScheduledCoursesDTO> {
+    const date = new Date(unixDate * 1);
+    const dateDay = date
+      .toLocaleDateString('en-US', { weekday: 'long' })
+      .toLowerCase();
+
+    const courses: Course[] = await this.courseModel
+      .find({
+        'professor.email': professorEmail,
+        'schedule.days': { $regex: `^${dateDay}`, $options: 'i' },
+      })
+      .exec();
+
+    const scheduledCourseDTO: ScheduledCoursesDTO =
+      this.coursesService.getScheduledCoursesInADate(courses, date);
+
+    return scheduledCourseDTO;
+  }
+
   private getCurrentDayOfWeek(): string {
     const now = new Date();
     const todayDay = now
